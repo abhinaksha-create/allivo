@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+
+    <h2 class="section-title">Order Details</h2>
+
+    {% if order %}
+    <!-- ORDER SUMMARY -->
+    <div class="details-card" style="grid-template-columns: 1fr;">
+        <div class="details-content">
+            <p><strong>Order Number:</strong> {{ order[1] }}</p>
+            <p><strong>Total Amount:</strong> ₹{{ "%.2f" % (order[2]|float) }}</p>
+            <p><strong>Delivery Address:</strong> {{ order[3] }}</p>
+            <p><strong>Phone:</strong> {{ order[4] }}</p>
+            <p><strong>Payment Method:</strong> {{ order[5]|upper }}</p>
+            <p><strong>Status:</strong> {{ order_status.replace('_', ' ').title() }}</p>
+            <p><strong>Ordered On:</strong> {{ order[7] }}</p>
+        </div>
+    </div>
+
+    <!-- TRACKING STATUS -->
+    <div class="order-status-wrapper">
+        <span class="order-status-badge status-{{ order_status }}">
+            {{ order_status.replace('_', ' ').title() }}
+        </span>
+
+        <h3 class="order-status-title">Tracking Status</h3>
+
+        <div class="order-progress">
+            <div class="order-step {% if order_status in ['placed', 'packed', 'out_for_delivery', 'delivered'] %}completed{% endif %}">
+                <div class="order-step-circle">1</div>
+                <h4>Placed</h4>
+                <p>Order confirmed</p>
+            </div>
+
+            <div class="order-step {% if order_status in ['packed', 'out_for_delivery', 'delivered'] %}completed{% endif %}">
+                <div class="order-step-circle">2</div>
+                <h4>Packed</h4>
+                <p>Preparing your items</p>
+            </div>
+
+            <div class="order-step {% if order_status in ['out_for_delivery', 'delivered'] %}completed{% endif %}">
+                <div class="order-step-circle">3</div>
+                <h4>Out for Delivery</h4>
+                <p>On the way to you</p>
+            </div>
+
+            <div class="order-step {% if order_status == 'delivered' %}completed{% endif %}">
+                <div class="order-step-circle">4</div>
+                <h4>Delivered</h4>
+                <p>Order completed</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ORDERED ITEMS -->
+    <h2 class="section-title">Ordered Items</h2>
+    <div class="product-grid">
+        {% if order_items %}
+            {% for item in order_items %}
+            <div class="card premium-product-card">
+                <div class="card-image-wrap">
+                    {% if item[5] %}
+                        <img src="{{ url_for('static', filename=item[5]) }}" alt="{{ item[4] }}">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='images/products/default-product.png') }}" alt="No Image">
+                    {% endif %}
+                </div>
+
+                <h3>{{ item[4] }}</h3>
+                <p class="category">Quantity: {{ item[1] }}</p>
+                <p class="category">Delivery Type: {{ item[3] }}</p>
+                <p class="price">₹{{ "%.2f" % (item[2]|float) }}</p>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No ordered items found.</p>
+        {% endif %}
+    </div>
+
+    {% else %}
+        <p>Order not found.</p>
+    {% endif %}
+
+</div>
+{% endblock %}

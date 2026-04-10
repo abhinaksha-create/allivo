@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container admin-products-page">
+
+    <div class="admin-page-head" style="margin-top: 24px;">
+        <div>
+            <p class="admin-overline" style="color:#6b7280;">Admin Control</p>
+            <h1 class="section-title" style="margin-top:0;">Manage Users</h1>
+            <p class="admin-subtext" style="color:#6b7280;">
+                Monitor user accounts, view registration details, and manage admin access.
+            </p>
+        </div>
+    </div>
+
+    {% if users %}
+        <div class="admin-user-grid">
+            {% for user in users %}
+            <div class="admin-user-card">
+
+                <div class="admin-user-top">
+                    <div class="admin-user-avatar">
+                        {{ user[2][0]|upper if user[2] else "U" }}
+                    </div>
+
+                    <div>
+                        <p class="admin-order-label">User ID</p>
+                        <h3>{{ user[1] }}</h3>
+                        <span class="admin-user-meta">@{{ user[2] }}</span>
+                    </div>
+
+                    {% if user[4] %}
+                        <span class="default-badge">Admin</span>
+                    {% else %}
+                        <span class="order-status-chip status-placed">Customer</span>
+                    {% endif %}
+                </div>
+
+                <div class="admin-user-body">
+                    <div class="admin-order-row">
+                        <span>Email</span>
+                        <strong>{{ user[3] }}</strong>
+                    </div>
+
+                    <div class="admin-order-row">
+                        <span>Created At</span>
+                        <strong>{{ user[5] }}</strong>
+                    </div>
+                </div>
+
+                <div class="admin-user-actions">
+                    {% if user[4] %}
+                        <a href="{{ url_for('remove_admin', user_id=user[0]) }}" class="btn danger-btn btn-sm">
+                            Remove Admin
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('make_admin', user_id=user[0]) }}" class="btn btn-sm">
+                            Make Admin
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="form-container" style="max-width:100%;">
+            <h2>No Users Found</h2>
+            <p style="text-align:center; color:#6b7280;">
+                User accounts will appear here once people register.
+            </p>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

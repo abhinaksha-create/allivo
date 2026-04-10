@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+
+    <div class="admin-page-head" style="margin-top: 24px;">
+        <div>
+            <p class="admin-overline" style="color:#6b7280;">Allivo Catalog</p>
+            <h1 class="section-title" style="margin-top: 0;">Explore Products</h1>
+            <p class="admin-subtext" style="color:#6b7280;">
+                Browse smart picks across groceries, fashion, essentials, and more.
+            </p>
+        </div>
+    </div>
+
+    <form method="GET" action="{{ url_for('products') }}" class="filter-form">
+        <input
+            type="text"
+            name="search"
+            placeholder="Search by product, brand, or subcategory"
+            value="{{ search }}"
+        >
+
+        <select name="category">
+            <option value="">All Categories</option>
+            {% for cat in categories %}
+                <option value="{{ cat[0] }}" {% if selected_category == cat[0] %}selected{% endif %}>
+                    {{ cat[0] }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit" class="btn">Apply</button>
+    </form>
+
+    <div class="product-grid">
+        {% if products %}
+            {% for product in products %}
+            <div class="card premium-product-card">
+
+                <div class="card-image-wrap">
+                        <a href="{{ url_for('add_to_wishlist', product_id=product[0]) }}" class="wishlist-btn">
+                        {% if product[0] in wishlist_ids %}
+                            <i class="fa-solid fa-heart wishlist-active"></i>
+                        {% else %}
+                            <i class="fa-regular fa-heart"></i>
+                        {% endif %}
+                    </a>
+                    {% if product[8] %}
+                        <img src="{{ url_for('static', filename=product[8]) }}" alt="{{ product[1] }}">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='images/products/default-product.png') }}" alt="No Image">
+                    {% endif %}
+
+                    {% if product[6]|float > 0 %}
+                        <span class="floating-badge">₹{{ "%.0f"|format(product[6]|float) }} OFF</span>
+                    {% endif %}
+                </div>
+
+                <h3>{{ product[1] }}</h3>
+
+                <p class="category">{{ product[2] }}</p>
+
+                {% if product[3] %}
+                    <p class="category">Subcategory: {{ product[3] }}</p>
+                {% endif %}
+
+                {% if product[4] %}
+                    <p class="category">Brand: {{ product[4] }}</p>
+                {% endif %}
+
+                <p class="price">
+                    ₹{{ "%.2f"|format((product[5]|float) - (product[6]|float)) }}
+                    {% if product[6]|float > 0 %}
+                        <span class="old-price">₹{{ "%.2f"|format(product[5]|float) }}</span>
+                    {% endif %}
+                </p>
+
+                <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
+                    {% if product[12] %}
+                        <span class="badge">Student Pick</span>
+                    {% endif %}
+
+                    {% if product[10] %}
+                        <span class="badge">{{ product[10]|title }}</span>
+                    {% endif %}
+
+                    {% if product[13] %}
+                        <span class="badge">Refill {{ product[13] }}d</span>
+                    {% endif %}
+                </div>
+
+                <p class="category">
+                    {% if product[7]|int > 0 %}
+                        <span class="stock-ok">In Stock: {{ product[7] }}</span>
+                    {% else %}
+                        <span class="stock-out">Out of Stock</span>
+                    {% endif %}
+                </p>
+
+                <div class="card-actions">
+                    <a href="{{ url_for('product_details', product_id=product[0]) }}" class="btn btn-outline">View</a>
+                    <a href="{{ url_for('add_to_cart', product_id=product[0]) }}" class="btn">Add to Cart</a>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="form-container" style="max-width:100%;">
+                <h2>No Products Found</h2>
+                <p style="text-align:center; color:#6b7280;">
+                    Try changing your search or category filter.
+                </p>
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

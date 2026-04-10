@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container admin-products-page">
+
+    <div class="admin-page-head" style="margin-top: 24px;">
+        <div>
+            <p class="admin-overline" style="color:#6b7280;">Admin Control</p>
+            <h1 class="section-title" style="margin-top:0;">Manage Categories</h1>
+            <p class="admin-subtext" style="color:#6b7280;">
+                Create and organize product categories to improve browsing and filtering.
+            </p>
+        </div>
+    </div>
+
+    <div class="admin-category-layout">
+
+        <!-- ADD CATEGORY -->
+        <div class="admin-category-card">
+            <h3>Add New Category</h3>
+            <p class="category-subtext">Create a new category for organizing products.</p>
+
+            <form method="POST" class="admin-category-form">
+                <label>Category Name</label>
+                <input type="text" name="name" required placeholder="e.g. Groceries">
+
+                <label>Description</label>
+                <textarea name="description" rows="3" placeholder="Short description"></textarea>
+
+                <button type="submit" class="btn">Add Category</button>
+            </form>
+        </div>
+
+        <!-- CATEGORY LIST -->
+        <div class="admin-category-card">
+            <h3>All Categories</h3>
+
+            {% if categories %}
+                <div class="category-list">
+                    {% for cat in categories %}
+                    <div class="category-item">
+
+                        <div class="category-info">
+                            <h4>{{ cat[1] }}</h4>
+                            <p>{{ cat[2] if cat[2] else "No description available" }}</p>
+                        </div>
+
+                        <div class="category-actions">
+                            <a href="{{ url_for('edit_category', category_id=cat[0]) }}" class="btn btn-outline btn-sm">Edit</a>
+
+                            <a href="{{ url_for('delete_category', category_id=cat[0]) }}"
+                            class="btn danger-btn btn-sm"
+                            onclick="return confirm('Delete this category?')">
+                            Delete
+                            </a>
+                        </div>
+
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <h4>No Categories Found</h4>
+                    <p>Add categories to organize your products.</p>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

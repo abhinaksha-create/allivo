@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container account-page">
+
+    <div class="admin-page-head" style="margin-top: 24px;">
+        <div>
+            <p class="admin-overline" style="color:#6b7280;">Account Center</p>
+            <h1 class="section-title" style="margin-top:0;">Payment Methods</h1>
+            <p class="admin-subtext" style="color:#6b7280;">
+                Save your preferred payment options for faster and smoother checkout.
+            </p>
+        </div>
+    </div>
+
+    <div class="account-layout">
+
+        <aside class="account-sidebar">
+            <div class="account-user-card">
+                <div class="account-avatar">
+                    {{ session.get("username", "U")[0]|upper }}
+                </div>
+                <h3 style="margin-bottom:6px;">{{ session.get("full_name", "User") }}</h3>
+                <p style="color:#6b7280;">Manage your account settings</p>
+            </div>
+
+            <div class="account-menu">
+                <a href="{{ url_for('profile') }}" class="account-menu-item">My Profile</a>
+                <a href="{{ url_for('orders') }}" class="account-menu-item">My Orders</a>
+                <a href="{{ url_for('wishlist') }}" class="account-menu-item">Wishlist</a>
+                <a href="{{ url_for('saved_addresses') }}" class="account-menu-item">Saved Addresses</a>
+                <a href="{{ url_for('payment_methods') }}" class="account-menu-item active">Payment Methods</a>
+                <a href="{{ url_for('settings') }}" class="account-menu-item">Settings</a>
+            </div>
+        </aside>
+
+        <section>
+            <div class="payment-grid">
+                <div class="payment-card payment-form-card">
+                    <h3>Add New Payment Method</h3>
+                    <p class="payment-subtext">
+                        Save UPI IDs, masked card details, or cash-on-delivery preference.
+                    </p>
+
+                    <form method="POST" class="payment-method-form">
+                        <label>Method Type</label>
+                        <select name="method_type" required>
+                            <option value="">Select Method</option>
+                            <option value="upi">UPI</option>
+                            <option value="card">Card</option>
+                            <option value="cod">Cash on Delivery</option>
+                        </select>
+
+                        <label>Provider / Bank / App Name</label>
+                        <input type="text" name="provider_name" placeholder="Example: Google Pay, HDFC, Visa">
+
+                        <label>Display Value</label>
+                        <input type="text" name="display_value" placeholder="Example: yourupi@okbank / **** 1234" required>
+
+                        <label class="payment-checkbox">
+                            <input type="checkbox" name="is_default">
+                            <span>Set as default payment method</span>
+                        </label>
+
+                        <button type="submit" class="btn">Save Payment Method</button>
+                    </form>
+                </div>
+
+                <div class="payment-card payment-list-card">
+                    <h3>Saved Payment Methods</h3>
+                    <p class="payment-subtext">
+                        Your secure payment preferences for future purchases.
+                    </p>
+
+                    {% if methods %}
+                        <div class="payment-list">
+                            {% for method in methods %}
+                            <div class="payment-item">
+                                <div class="payment-item-left">
+                                    <div class="payment-icon">
+                                        {% if method[1] == 'upi' %}
+                                            <i class="fa-solid fa-mobile-screen-button"></i>
+                                        {% elif method[1] == 'card' %}
+                                            <i class="fa-regular fa-credit-card"></i>
+                                        {% else %}
+                                            <i class="fa-solid fa-money-bill-wave"></i>
+                                        {% endif %}
+                                    </div>
+
+                                    <div>
+                                        <div class="payment-title-row">
+                                            <h4>
+                                                {% if method[1] == 'upi' %}
+                                                    UPI
+                                                {% elif method[1] == 'card' %}
+                                                    Card
+                                                {% else %}
+                                                    Cash on Delivery
+                                                {% endif %}
+                                            </h4>
+
+                                            {% if method[4] %}
+                                                <span class="default-badge">Default</span>
+                                            {% endif %}
+                                        </div>
+
+                                        {% if method[2] %}
+                                            <p class="payment-provider">{{ method[2] }}</p>
+                                        {% endif %}
+
+                                        <p class="payment-value">{{ method[3] }}</p>
+                                    </div>
+                                </div>
+
+                                <div class="payment-actions">
+                                    {% if not method[4] %}
+                                        <a href="{{ url_for('set_default_payment', method_id=method[0]) }}" class="btn btn-outline btn-sm">
+                                            Set Default
+                                        </a>
+                                    {% endif %}
+
+                                    <a href="{{ url_for('delete_payment_method', method_id=method[0]) }}"
+                                       class="btn danger-btn btn-sm"
+                                       onclick="return confirm('Remove this payment method?')">
+                                        Delete
+                                    </a>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="empty-payment-state">
+                            <i class="fa-regular fa-credit-card"></i>
+                            <h4>No Payment Methods Saved</h4>
+                            <p>Add your first payment option for faster checkout.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+
+    </div>
+</div>
+{% endblock %}

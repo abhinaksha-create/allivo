@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container admin-dashboard-page">
+
+    <!-- TOP HERO -->
+    <div class="admin-hero">
+        <div class="admin-hero-left">
+            <p class="admin-overline">Admin Control Center</p>
+            <h1>Store Dashboard</h1>
+            <p class="admin-subtext">
+                Manage products, orders, users, and categories with a modern premium admin experience.
+            </p>
+        </div>
+
+        <div class="admin-hero-actions">
+            <a href="{{ url_for('add_product') }}" class="btn">+ Add Product</a>
+            <a href="{{ url_for('manage_products') }}" class="btn btn-outline">Manage Products</a>
+        </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="admin-stats-grid">
+        <div class="admin-stat-card">
+            <div class="admin-stat-icon purple">
+                <i class="fa-solid fa-box-open"></i>
+            </div>
+            <div>
+                <p class="stat-label">Total Products</p>
+                <h3>{{ total_products }}</h3>
+            </div>
+        </div>
+
+        <div class="admin-stat-card">
+            <div class="admin-stat-icon blue">
+                <i class="fa-solid fa-cart-shopping"></i>
+            </div>
+            <div>
+                <p class="stat-label">Total Orders</p>
+                <h3>{{ total_orders }}</h3>
+            </div>
+        </div>
+
+        <div class="admin-stat-card">
+            <div class="admin-stat-icon green">
+                <i class="fa-solid fa-users"></i>
+            </div>
+            <div>
+                <p class="stat-label">Total Users</p>
+                <h3>{{ total_users }}</h3>
+            </div>
+        </div>
+
+        <div class="admin-stat-card">
+            <div class="admin-stat-icon orange">
+                <i class="fa-solid fa-signal"></i>
+            </div>
+            <div>
+                <p class="stat-label">Store Status</p>
+                <h3>Active</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <h2 class="section-title">Quick Actions</h2>
+    <div class="admin-actions-grid">
+
+        <a href="{{ url_for('add_product') }}" class="admin-action-card">
+            <div class="admin-action-top">
+                <div class="mini-icon"><i class="fa-solid fa-plus"></i></div>
+                <span class="admin-action-arrow">→</span>
+            </div>
+            <h3>Add Product</h3>
+            <p>Create and upload a new product with image, stock, price, and category.</p>
+        </a>
+
+        <a href="{{ url_for('manage_products') }}" class="admin-action-card">
+            <div class="admin-action-top">
+                <div class="mini-icon"><i class="fa-solid fa-layer-group"></i></div>
+                <span class="admin-action-arrow">→</span>
+            </div>
+            <h3>Manage Products</h3>
+            <p>Edit, update, and remove products from your store catalog easily.</p>
+        </a>
+
+        <a href="{{ url_for('manage_orders') }}" class="admin-action-card">
+            <div class="admin-action-top">
+                <div class="mini-icon"><i class="fa-solid fa-truck-fast"></i></div>
+                <span class="admin-action-arrow">→</span>
+            </div>
+            <h3>Manage Orders</h3>
+            <p>Track customer orders and update delivery flow professionally.</p>
+        </a>
+
+        <a href="{{ url_for('manage_categories') }}" class="admin-action-card">
+            <div class="admin-action-top">
+                <div class="mini-icon"><i class="fa-solid fa-tags"></i></div>
+                <span class="admin-action-arrow">→</span>
+            </div>
+            <h3>Manage Categories</h3>
+            <p>Organize groceries, essentials, and fashion into clear categories.</p>
+        </a>
+
+        <a href="{{ url_for('manage_users') }}" class="admin-action-card">
+            <div class="admin-action-top">
+                <div class="mini-icon"><i class="fa-solid fa-user-shield"></i></div>
+                <span class="admin-action-arrow">→</span>
+            </div>
+            <h3>Manage Users</h3>
+            <p>View users, control roles, and manage admin privileges securely.</p>
+        </a>
+
+        <a href="{{ url_for('home') }}" class="admin-action-card">
+            <div class="admin-action-top">
+                <div class="mini-icon"><i class="fa-solid fa-store"></i></div>
+                <span class="admin-action-arrow">→</span>
+            </div>
+            <h3>Visit Storefront</h3>
+            <p>Go back to the customer-facing store and review the live shopping UI.</p>
+        </a>
+
+    </div>
+
+    <!-- INFO CARDS -->
+    <div class="admin-info-panel">
+        <div class="admin-info-card">
+            <h3>Admin Notes</h3>
+            <ul>
+                <li>Keep images uniform for a premium storefront look.</li>
+                <li>Update stock regularly to avoid order issues.</li>
+                <li>Review new orders daily for fast service.</li>
+                <li>Use categories properly to improve discovery.</li>
+            </ul>
+        </div>
+
+        <div class="admin-info-card">
+            <h3>System Summary</h3>
+            <p>
+                Smart Hybrid Store combines groceries, essentials, and fashion in one platform.
+                This admin area helps you manage catalog, users, and orders with a cleaner,
+                more commercial dashboard experience.
+            </p>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

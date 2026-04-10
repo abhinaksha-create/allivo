@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+
+    <section class="promo-strip">
+        <div class="promo-content">
+            <h2>Refill Essentials</h2>
+            <p>Products you may need again soon based on regular household usage cycles.</p>
+        </div>
+        <a href="{{ url_for('products') }}" class="btn btn-light">Browse All Products</a>
+    </section>
+
+    <h2 class="section-title">Refill Recommendations</h2>
+
+    <div class="product-grid">
+        {% if refill_products %}
+            {% for item in refill_products %}
+            <div class="card premium-product-card">
+                <div class="card-image-wrap">
+                    {% if item[6] %}
+                        <img src="{{ url_for('static', filename=item[6]) }}" alt="{{ item[1] }}">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='images/products/default-product.png') }}" alt="No Image">
+                    {% endif %}
+                </div>
+
+                <h3>{{ item[1] }}</h3>
+                <p class="category">{{ item[2] }}</p>
+                <p class="category">Brand: {{ item[3] }}</p>
+
+                <p class="price">
+                    ₹{{ "%.2f" % ((item[4]|float) - (item[5]|float)) }}
+                    {% if item[5]|float > 0 %}
+                        <span class="old-price">₹{{ "%.2f" % (item[4]|float) }}</span>
+                    {% endif %}
+                </p>
+
+                <span class="badge">Refill in {{ item[7] }} days</span>
+
+                <div class="card-actions">
+                    <a href="{{ url_for('product_details', product_id=item[0]) }}" class="btn btn-outline">View</a>
+                    <a href="{{ url_for('add_to_cart', product_id=item[0]) }}" class="btn">Add to Cart</a>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No refill products available right now.</p>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

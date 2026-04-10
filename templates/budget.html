@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2 class="section-title">Budget Planner</h2>
+
+    <div class="form-container">
+        <form method="GET" action="{{ url_for('budget') }}">
+            <input type="number" step="0.01" name="budget" placeholder="Enter your budget" value="{{ selected_budget if selected_budget is defined else '' }}">
+
+            <select name="category">
+                <option value="">All Categories</option>
+                <option value="Groceries" {% if selected_category == "Groceries" %}selected{% endif %}>Groceries</option>
+                <option value="Clothing" {% if selected_category == "Clothing" %}selected{% endif %}>Clothing</option>
+                <option value="Daily Essentials" {% if selected_category == "Daily Essentials" %}selected{% endif %}>Daily Essentials</option>
+            </select>
+
+            <button type="submit" class="btn">Find Products</button>
+        </form>
+    </div>
+
+    <div class="product-grid">
+        {% if suggested_products %}
+            {% for product in suggested_products %}
+            <div class="card">
+                <img src="{{ url_for('static', filename= product[8]) }}" alt="{{ product[1] }}">
+                <h3>{{ product[1] }}</h3>
+                <p class="category">{{ product[2] }}</p>
+                <p>Brand: {{ product[4] }}</p>
+                <p class="price">₹{{ "%.2f"|format(product[5] - product[6]) }}</p>
+                <a href="{{ url_for('product_details', product_id=product[0]) }}" class="btn">View Details</a>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>Enter a budget and choose a category to get suggestions.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

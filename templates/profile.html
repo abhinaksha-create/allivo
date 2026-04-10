@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container account-page">
+
+    <div class="admin-page-head" style="margin-top: 24px;">
+        <div>
+            <p class="admin-overline" style="color:#6b7280;">Account Center</p>
+            <h1 class="section-title" style="margin-top:0;">My Profile</h1>
+            <p class="admin-subtext" style="color:#6b7280;">
+                Manage your account overview, track orders, and access saved preferences.
+            </p>
+        </div>
+    </div>
+
+    <div class="account-layout">
+
+        <aside class="account-sidebar">
+            <div class="account-user-card">
+                <div class="account-avatar">
+                    {{ user[2][0]|upper if user and user[2] else "U" }}
+                </div>
+                <h3 style="margin-bottom:6px;">{{ user[1] if user else session.get("full_name", "User") }}</h3>
+                <p style="color:#6b7280;">@{{ user[2] if user else session.get("username", "user") }}</p>
+            </div>
+
+            <div class="account-menu">
+                <a href="{{ url_for('profile') }}" class="account-menu-item active">My Profile</a>
+                <a href="{{ url_for('orders') }}" class="account-menu-item">My Orders</a>
+                <a href="{{ url_for('wishlist') }}" class="account-menu-item">Wishlist</a>
+                <a href="{{ url_for('saved_addresses') }}" class="account-menu-item">Saved Addresses</a>
+                <a href="{{ url_for('payment_methods') }}" class="account-menu-item">Payment Methods</a>
+                <a href="{{ url_for('settings') }}" class="account-menu-item">Settings</a>
+            </div>
+        </aside>
+
+        <section>
+            <div class="profile-refined-layout">
+
+                <div class="profile-main-card">
+                    <div class="profile-main-top">
+                        <div class="profile-main-avatar">
+                            {{ user[2][0]|upper if user and user[2] else "U" }}
+                        </div>
+                        <div>
+                            <h3>{{ user[1] if user else session.get("full_name", "User") }}</h3>
+                            <p>@{{ user[2] if user else session.get("username", "user") }}</p>
+                        </div>
+                    </div>
+
+                    <div class="profile-info-list">
+                        <div class="profile-info-row">
+                            <span>Full Name</span>
+                            <strong>{{ user[1] if user else "Not Available" }}</strong>
+                        </div>
+                        <div class="profile-info-row">
+                            <span>Username</span>
+                            <strong>{{ user[2] if user else "Not Available" }}</strong>
+                        </div>
+                        <div class="profile-info-row">
+                            <span>Email</span>
+                            <strong>{{ user[3] if user else "Not Available" }}</strong>
+                        </div>
+                        <div class="profile-info-row">
+                            <span>Phone</span>
+                            <strong>{{ user[4] if user else "Not Available" }}</strong>
+                        </div>
+                        <div class="profile-info-row">
+                            <span>Account Type</span>
+                            <strong>
+                                {% if user and user[5] %}
+                                    Admin
+                                {% else %}
+                                    Customer
+                                {% endif %}
+                            </strong>
+                        </div>
+                    </div>
+
+                    <div class="profile-main-actions">
+                        <a href="{{ url_for('settings') }}" class="btn">Edit Profile</a>
+                    </div>
+                </div>
+
+                <div class="profile-summary-panel">
+                    <a href="{{ url_for('orders') }}" class="profile-stat-card clickable">
+                        <div class="profile-stat-icon blue">
+                            <i class="fa-solid fa-box"></i>
+                        </div>
+                        <div>
+                            <p>Total Orders</p>
+                            <h4>{{ total_orders }}</h4>
+                        </div>
+                    </a>
+
+                    <a href="{{ url_for('cart') }}" class="profile-stat-card clickable">
+                        <div class="profile-stat-icon purple">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </div>
+                        <div>
+                            <p>Cart Items</p>
+                            <h4>{{ total_cart_items }}</h4>
+                        </div>
+                    </a>
+
+                    <div class="profile-note-card">
+                        <h4>Account Overview</h4>
+                        <p>
+                            Access your orders, saved preferences, and shopping details from one place.
+                            Keep your profile updated for a smoother Allivo experience.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="form-container" style="max-width: 700px;">
+    <h2>Checkout</h2>
+
+    <form method="POST">
+        {% if saved_addresses %}
+            <label>Select Saved Address</label>
+            <select name="saved_address_id">
+                <option value="">-- Choose Saved Address --</option>
+                {% for addr in saved_addresses %}
+                    <option value="{{ addr[0] }}">
+                        {{ addr[1] }} - {{ addr[2] }}, {{ addr[3] }}, {{ addr[4] }} - {{ addr[5] }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <p style="margin: 10px 0; color: #6b7280;">Or enter a new address below</p>
+        {% endif %}
+
+        <label>Delivery Address</label>
+        <textarea name="address" rows="4" placeholder="Enter new address if not using saved address"></textarea>
+
+        <label>Phone Number</label>
+        <input type="text" name="phone" placeholder="Enter phone number" required>
+
+        <label>Payment Method</label>
+        <select name="payment_method" required>
+            <option value="">Select Payment Method</option>
+            <option value="cod">Cash on Delivery</option>
+            <option value="upi">UPI</option>
+            <option value="card">Card</option>
+        </select>
+
+        <button type="submit" class="btn">Place Order</button>
+    </form>
+</div>
+{% endblock %}

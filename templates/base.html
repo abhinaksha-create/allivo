@@ -1,0 +1,184 @@
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const toggle = document.getElementById("profileToggle");
+    const menu = document.getElementById("profileMenu");
+    const dropdown = document.getElementById("profileDropdown");
+
+    if (toggle && menu && dropdown) {
+        toggle.addEventListener("click", function (e) {
+            e.stopPropagation();
+            menu.classList.toggle("show");
+        });
+
+        document.addEventListener("click", function (e) {
+            if (!dropdown.contains(e.target)) {
+                menu.classList.remove("show");
+            }
+        });
+    }
+});
+</script>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Allivo</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="container nav-flex">
+
+        <!-- LOGO -->
+        <div class="logo">
+            <a href="{{ url_for('home') }}">Allivo</a>
+        </div>
+
+        <!-- SEARCH -->
+        <div class="search-wrap">
+            <form action="{{ url_for('products') }}" method="GET" class="search-bar">
+                <input type="text" name="search" placeholder="Search products..." value="{{ request.args.get('search', '') }}">
+                <button type="submit">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- NAV LINKS -->
+        <ul class="nav-links">
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('products') }}">Products</a></li>
+            <li><a href="{{ url_for('budget') }}">Budget</a></li>
+            <li><a href="{{ url_for('student_mode') }}">Student Picks</a></li>
+            <li><a href="{{ url_for('refill') }}">Refill</a></li>
+        </ul>
+
+        <!-- ICONS -->
+        <div class="nav-icons">
+
+            <!-- CART -->
+            <a href="{{ url_for('cart') }}" class="nav-icon">
+                <i class="fa-solid fa-cart-shopping"></i>
+            </a>
+
+            <!-- PROFILE DROPDOWN -->
+            <div class="profile-dropdown" id="profileDropdown">
+    <button class="nav-icon profile-btn" id="profileToggle" type="button">
+        <i class="fa-solid fa-user"></i>
+    </button>
+
+    <div class="dropdown-menu profile-menu" id="profileMenu">
+        {% if session.get("user_id") %}
+            <div class="dropdown-user-top">
+                <div class="dropdown-avatar">
+                    {{ session.get("username", "U")[0]|upper }}
+                </div>
+                <div>
+                    <h4>{{ session.get("full_name", "User") }}</h4>
+                    <p>@{{ session.get("username", "user") }}</p>
+                </div>
+            </div>
+
+            <div class="dropdown-divider"></div>
+
+            <a href="{{ url_for('profile') }}">
+                <i class="fa-regular fa-user"></i>
+                <span>My Profile</span>
+            </a>
+
+            <a href="{{ url_for('orders') }}">
+                <i class="fa-solid fa-box"></i>
+                <span>My Orders</span>
+            </a>
+
+            <a href="{{ url_for('wishlist') }}">
+                <i class="fa-regular fa-heart"></i>
+                <span>Wishlist</span>
+            </a>
+
+            <a href="{{ url_for('saved_addresses') }}">
+                <i class="fa-solid fa-location-dot"></i>
+                <span>Saved Addresses</span>
+            </a>
+
+            <a href="{{ url_for('payment_methods') }}">
+                <i class="fa-regular fa-credit-card"></i>
+                <span>Payment Methods</span>
+            </a>
+
+            <a href="{{ url_for('settings') }}">
+                <i class="fa-solid fa-gear"></i>
+                <span>Settings</span>
+            </a>
+
+            {% if session.get("is_admin") %}
+                <div class="dropdown-divider"></div>
+                <a href="{{ url_for('admin_dashboard') }}">
+                    <i class="fa-solid fa-user-shield"></i>
+                    <span>Admin Panel</span>
+                </a>
+            {% endif %}
+
+            <div class="dropdown-divider"></div>
+
+            <a href="{{ url_for('logout') }}" class="dropdown-logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+        {% else %}
+            <a href="{{ url_for('login') }}">
+                <i class="fa-solid fa-right-to-bracket"></i>
+                <span>Login</span>
+            </a>
+
+            <a href="{{ url_for('register') }}">
+                <i class="fa-solid fa-user-plus"></i>
+                <span>Register</span>
+            </a>
+
+        {% endif %}
+    </div>
+</div>
+
+        </div>
+
+    </div>
+</nav>
+
+<!-- FLASH MESSAGES -->
+<div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash flash-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</div>
+
+<!-- MAIN CONTENT -->
+<main>
+    {% block content %}{% endblock %}
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="container">
+        <p>&copy; 2026 Allivo. All rights reserved.</p>
+    </div>
+</footer>
+
+</body>
+</html>

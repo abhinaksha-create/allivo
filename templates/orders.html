@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container account-page">
+
+    <div class="admin-page-head" style="margin-top: 24px;">
+        <div>
+            <p class="admin-overline" style="color:#6b7280;">Account Center</p>
+            <h1 class="section-title" style="margin-top:0;">My Orders</h1>
+            <p class="admin-subtext" style="color:#6b7280;">
+                Track your previous purchases, review order status, and buy again easily.
+            </p>
+        </div>
+    </div>
+
+    <div class="account-layout">
+
+        <aside class="account-sidebar">
+            <div class="account-user-card">
+                <div class="account-avatar">
+                    {{ session.get("username", "U")[0]|upper }}
+                </div>
+                <h3 style="margin-bottom:6px;">{{ session.get("full_name", "User") }}</h3>
+                <p style="color:#6b7280;">Manage your account settings</p>
+            </div>
+
+            <div class="account-menu">
+                <a href="{{ url_for('profile') }}" class="account-menu-item">My Profile</a>
+                <a href="{{ url_for('orders') }}" class="account-menu-item active">My Orders</a>
+                <a href="{{ url_for('wishlist') }}" class="account-menu-item">Wishlist</a>
+                <a href="{{ url_for('saved_addresses') }}" class="account-menu-item">Saved Addresses</a>
+                <a href="{{ url_for('payment_methods') }}" class="account-menu-item">Payment Methods</a>
+                <a href="{{ url_for('settings') }}" class="account-menu-item">Settings</a>
+            </div>
+        </aside>
+
+        <section>
+            <div class="orders-page-card">
+                <h3>Order History</h3>
+                <p class="orders-subtext">
+                    View your purchase history, order updates, and repeat previous purchases.
+                </p>
+
+                {% if orders %}
+                    <div class="orders-modern-list">
+                        {% for order in orders %}
+                        <div class="order-modern-card">
+                            <div class="order-modern-top">
+                                <div>
+                                    <p class="order-label">Order Number</p>
+                                    <h4>{{ order[1] }}</h4>
+                                </div>
+
+                                <div class="order-status-chip status-{{ order[3] }}">
+                                    {{ order[3].replace('_', ' ').title() }}
+                                </div>
+                            </div>
+
+                            <div class="order-modern-meta">
+                                <div>
+                                    <span>Total Amount</span>
+                                    <strong>₹{{ "%.2f"|format(order[2]|float) }}</strong>
+                                </div>
+
+                                <div>
+                                    <span>Ordered On</span>
+                                    <strong>{{ order[4] }}</strong>
+                                </div>
+                            </div>
+
+                            <div class="order-modern-actions">
+                                <a href="{{ url_for('order_details', order_id=order[0]) }}" class="btn btn-outline">View Details</a>
+                                <a href="{{ url_for('buy_again', order_id=order[0]) }}" class="btn">Buy Again</a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-orders-state">
+                        <i class="fa-solid fa-box-open"></i>
+                        <h4>No Orders Yet</h4>
+                        <p>Start shopping to see your order history here.</p>
+                        <a href="{{ url_for('products') }}" class="btn">Shop Now</a>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+
+    </div>
+</div>
+{% endblock %}

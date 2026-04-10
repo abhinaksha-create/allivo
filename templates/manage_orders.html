@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container admin-products-page">
+
+    <div class="admin-page-head" style="margin-top: 24px;">
+        <div>
+            <p class="admin-overline" style="color:#6b7280;">Admin Control</p>
+            <h1 class="section-title" style="margin-top:0;">Manage Orders</h1>
+            <p class="admin-subtext" style="color:#6b7280;">
+                Track customer orders, update delivery progress, and manage order workflow efficiently.
+            </p>
+        </div>
+    </div>
+
+    {% if orders %}
+        <div class="orders-admin-grid">
+            {% for order in orders %}
+            <div class="admin-order-card">
+                <div class="admin-order-top">
+                    <div>
+                        <p class="admin-order-label">Order Number</p>
+                        <h3>{{ order[1] if order[1] else "ORD" ~ "%04d"|format(order[0]) }}</h3>
+                    </div>
+
+                    <span class="order-status-chip status-{{ order[7] }}">
+                        {{ order[7].replace('_', ' ').title() }}
+                    </span>
+                </div>
+
+                <div class="admin-order-body">
+                    <div class="admin-order-row">
+                        <span>Order ID</span>
+                        <strong>#{{ order[0] }}</strong>
+                    </div>
+
+                    <div class="admin-order-row">
+                        <span>User ID</span>
+                        <strong>{{ order[2] }}</strong>
+                    </div>
+
+                    <div class="admin-order-row">
+                        <span>Total Amount</span>
+                        <strong>₹{{ "%.2f"|format(order[3]|float) }}</strong>
+                    </div>
+
+                    <div class="admin-order-row">
+                        <span>Phone</span>
+                        <strong>{{ order[5] }}</strong>
+                    </div>
+
+                    <div class="admin-order-row">
+                        <span>Payment Method</span>
+                        <strong>{{ order[6]|upper }}</strong>
+                    </div>
+
+                    <div class="admin-order-row admin-order-address">
+                        <span>Address</span>
+                        <strong>{{ order[4] }}</strong>
+                    </div>
+
+                    <div class="admin-order-row">
+                        <span>Created At</span>
+                        <strong>{{ order[8] }}</strong>
+                    </div>
+                </div>
+
+                <div class="admin-order-actions">
+                    <form action="{{ url_for('update_order_status', order_id=order[0]) }}" method="POST" class="admin-order-form">
+                        <select name="order_status" required>
+                            <option value="placed" {% if order[7] == 'placed' %}selected{% endif %}>Placed</option>
+                            <option value="packed" {% if order[7] == 'packed' %}selected{% endif %}>Packed</option>
+                            <option value="out_for_delivery" {% if order[7] == 'out_for_delivery' %}selected{% endif %}>Out for Delivery</option>
+                            <option value="delivered" {% if order[7] == 'delivered' %}selected{% endif %}>Delivered</option>
+                        </select>
+
+                        <button type="submit" class="btn btn-sm">Update</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="form-container" style="max-width:100%;">
+            <h2>No Orders Found</h2>
+            <p style="text-align:center; color:#6b7280;">
+                Orders placed by customers will appear here.
+            </p>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

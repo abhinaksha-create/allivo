@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container payment-gateway-page">
+
+    <div class="payment-gateway-wrap">
+        <div class="payment-gateway-card">
+            <div class="payment-gateway-head">
+                <p class="admin-overline" style="color:#6b7280;">Secure Payment</p>
+                <h1>Complete Your Payment</h1>
+                <p class="payment-gateway-subtext">
+                    Review your payment details and confirm the transaction.
+                </p>
+            </div>
+
+            <div class="gateway-summary">
+                <div class="gateway-summary-row">
+                    <span>Order Number</span>
+                    <strong>{{ order[1] }}</strong>
+                </div>
+                <div class="gateway-summary-row">
+                    <span>Amount Payable</span>
+                    <strong>₹{{ "%.2f"|format(order[2]|float) }}</strong>
+                </div>
+                <div class="gateway-summary-row">
+                    <span>Payment Method</span>
+                    <strong>{{ order[3]|upper }}</strong>
+                </div>
+                <div class="gateway-summary-row">
+                    <span>Status</span>
+                    <strong>{{ order[4].replace('_', ' ').title() }}</strong>
+                </div>
+            </div>
+
+            {% if order[3] == 'upi' %}
+                <div class="gateway-method-box">
+                    <h3>UPI Payment</h3>
+                    <p>Use your UPI app to complete the payment.</p>
+
+                    <div class="gateway-demo-box">
+                        <p><strong>UPI ID:</strong> allivo@upi</p>
+                        <p><strong>Reference:</strong> {{ order[1] }}</p>
+                    </div>
+                </div>
+            {% elif order[3] == 'card' %}
+                <div class="gateway-method-box">
+                    <h3>Card Payment</h3>
+                    <p>Enter demo card details for project presentation.</p>
+
+                    <div class="gateway-form-grid">
+                        <input type="text" placeholder="Card Number" value="4111 1111 1111 1111">
+                        <input type="text" placeholder="Cardholder Name" value="Demo User">
+                        <input type="text" placeholder="MM/YY" value="12/28">
+                        <input type="text" placeholder="CVV" value="123">
+                    </div>
+                </div>
+            {% else %}
+                <div class="gateway-method-box">
+                    <h3>Cash on Delivery</h3>
+                    <p>No online payment is needed for this order.</p>
+                </div>
+            {% endif %}
+
+            <form method="POST" class="gateway-confirm-form">
+                <button type="submit" class="btn">Confirm Payment</button>
+                <a href="{{ url_for('orders') }}" class="btn btn-outline">Back to Orders</a>
+            </form>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

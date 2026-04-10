@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2 class="section-title">My Cart</h2>
+
+    <!-- INSTANT DELIVERY -->
+    <h3>Instant Delivery Items</h3>
+    <div class="product-grid">
+        {% if instant_items %}
+            {% for item in instant_items %}
+            <div class="card">
+                <img src="{{ url_for('static', filename= item.image) }}" alt="{{ item.name }}">
+                
+                <h3>{{ item.name }}</h3>
+
+                <!-- QUANTITY CONTROL -->
+                <p>Quantity:</p>
+                <div style="display:flex; justify-content:center; align-items:center; gap:10px; margin:10px 0;">
+                    
+                    <a href="{{ url_for('decrease_quantity', cart_item_id=item.cart_item_id) }}" class="btn danger-btn">-</a>
+                    
+                    <span style="font-size:18px; font-weight:bold;">{{ item.quantity }}</span>
+                    
+                    <a href="{{ url_for('increase_quantity', cart_item_id=item.cart_item_id) }}" class="btn">+</a>
+                </div>
+
+                <p>Delivery: {{ item.delivery_type }}</p>
+                <p>Subtotal: ₹{{ "%.2f"|format(item.subtotal)|float }}</p>
+
+                <a href="{{ url_for('remove_from_cart', cart_item_id=item.cart_item_id) }}" class="btn danger-btn">Remove</a>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No instant delivery items.</p>
+        {% endif %}
+    </div>
+
+    <!-- SCHEDULED DELIVERY -->
+    <h3>Scheduled Delivery Items</h3>
+    <div class="product-grid">
+        {% if scheduled_items %}
+            {% for item in scheduled_items %}
+            <div class="card">
+                <img src="{{ url_for('static', filename=item.image) }}" alt="{{ item.name }}">
+                
+                <h3>{{ item.name }}</h3>
+
+                <!-- QUANTITY CONTROL -->
+                <p>Quantity:</p>
+                <div style="display:flex; justify-content:center; align-items:center; gap:10px; margin:10px 0;">
+                    
+                    <a href="{{ url_for('decrease_quantity', cart_item_id=item.cart_item_id) }}" class="btn danger-btn">-</a>
+                    
+                    <span style="font-size:18px; font-weight:bold;">{{ item.quantity }}</span>
+                    
+                    <a href="{{ url_for('increase_quantity', cart_item_id=item.cart_item_id) }}" class="btn">+</a>
+                </div>
+
+                <p>Delivery: {{ item.delivery_type }}</p>
+                <p>Subtotal: ₹{{ "%.2f"|format(item.subtotal) |float}}</p>
+
+                <a href="{{ url_for('remove_from_cart', cart_item_id=item.cart_item_id) }}" class="btn danger-btn">Remove</a>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No scheduled delivery items.</p>
+        {% endif %}
+    </div>
+
+    <!-- TOTAL -->
+    <h3 style="margin-top: 20px;">Total: ₹{{ "%.2f"|format(total if total is defined else 0) }}</h3>
+
+    <a href="{{ url_for('checkout') }}" class="btn" style="margin-top: 10px;">Proceed to Checkout</a>
+</div>
+{% endblock %}

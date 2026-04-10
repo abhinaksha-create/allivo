@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container form-container">
+    <h2>Edit Product</h2>
+
+    <form method="POST">
+        <input type="text" name="name" placeholder="Product Name" value="{{ product[1] }}" required>
+        <input type="text" name="subcategory" placeholder="Subcategory" value="{{ product[3] }}">
+        <input type="text" name="brand" placeholder="Brand" value="{{ product[4] }}">
+        <input type="number" step="0.01" name="price" placeholder="Price" value="{{ product[5] }}" required>
+        <input type="number" step="0.01" name="discount" placeholder="Discount" value="{{ product[6] }}">
+        <input type="number" name="stock" placeholder="Stock" value="{{ product[7] }}" required>
+        <input type="text" name="image" placeholder="Image path" value="{{ product[8] }}">
+        <textarea name="description" placeholder="Description">{{ product[9] }}</textarea>
+
+        <select name="delivery_type" required>
+            <option value="instant" {% if product[10] == 'instant' %}selected{% endif %}>Instant</option>
+            <option value="scheduled" {% if product[10] == 'scheduled' %}selected{% endif %}>Scheduled</option>
+        </select>
+
+        <input type="number" step="0.1" name="rating" placeholder="Rating" value="{{ product[11] }}">
+        <input type="number" name="refill_days" placeholder="Refill Days" value="{{ product[13] if product[13] is not none else '' }}">
+
+        <label>
+            <input type="checkbox" name="is_student_pick" value="1" {% if product[12] %}checked{% endif %}>
+            Student Pick
+        </label>
+
+        <button type="submit" class="btn">Update Product</button>
+    </form>
+</div>
+{% endblock %}

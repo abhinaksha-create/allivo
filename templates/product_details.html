@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container details-page">
+
+    {% if product %}
+    <div class="details-card">
+
+        <div class="details-image-wrap">
+            {% if product[8] %}
+                <img src="{{ url_for('static', filename=product[8]) }}" alt="{{ product[1] }}">
+            {% else %}
+                <img src="{{ url_for('static', filename='images/products/default-product.png') }}" alt="No Image">
+            {% endif %}
+        </div>
+
+        <div class="details-content">
+            <p class="category">{{ product[2] }}</p>
+            <h2>{{ product[1] }}</h2>
+
+            {% if product[3] %}
+                <p><strong>Subcategory:</strong> {{ product[3] }}</p>
+            {% endif %}
+
+            {% if product[4] %}
+                <p><strong>Brand:</strong> {{ product[4] }}</p>
+            {% endif %}
+
+            <div class="price-block">
+                <p class="price">
+                    ₹{{ "%.2f"|format((product[5]|float) - (product[6]|float)) }}
+                    {% if product[6]|float > 0 %}
+                        <span class="old-price">₹{{ "%.2f"|format(product[5]|float) }}</span>
+                    {% endif %}
+                </p>
+            </div>
+
+            <div class="details-meta">
+                <div class="meta-pill">
+                    <strong>Stock:</strong>
+                    {% if product[7]|int > 0 %}
+                        {{ product[7] }}
+                    {% else %}
+                        Out of Stock
+                    {% endif %}
+                </div>
+
+                <div class="meta-pill">
+                    <strong>Delivery:</strong> {{ product[10]|title }}
+                </div>
+
+                <div class="meta-pill">
+                    <strong>Rating:</strong> {{ product[11] }}
+                </div>
+
+                {% if product[13] %}
+                <div class="meta-pill">
+                    <strong>Refill:</strong> {{ product[13] }} days
+                </div>
+                {% endif %}
+            </div>
+
+            {% if product[12] %}
+                <p class="student-pick">Student Pick</p>
+            {% endif %}
+
+            <div class="details-description">
+                <h4>Description</h4>
+                <p>{{ product[9] }}</p>
+            </div>
+
+            <div class="details-actions">
+                <a href="{{ url_for('add_to_cart', product_id=product[0]) }}" class="btn">Add to Cart</a>
+
+                <a href="{{ url_for('add_to_wishlist', product_id=product[0]) }}" class="btn btn-outline">
+                    {% if product[0] in wishlist_ids %}
+                        <i class="fa-solid fa-heart wishlist-active"></i>
+                    {% else %}
+                        <i class="fa-regular fa-heart"></i>
+                    {% endif %}
+                    Wishlist
+                </a>
+
+                <a href="{{ url_for('products') }}" class="btn btn-outline">Continue Shopping</a>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="section-title">Related Products</h2>
+    <div class="product-grid">
+        {% if related_products %}
+            {% for item in related_products %}
+            <div class="card premium-product-card">
+
+                <div class="card-image-wrap">
+                    <a href="{{ url_for('add_to_wishlist', product_id=item[0]) }}" class="wishlist-btn" title="Add to Wishlist">
+                        {% if item[0] in wishlist_ids %}
+                            <i class="fa-solid fa-heart wishlist-active"></i>
+                        {% else %}
+                            <i class="fa-regular fa-heart"></i>
+                        {% endif %}
+                    </a>
+
+                    {% if item[4] %}
+                        <img src="{{ url_for('static', filename=item[4]) }}" alt="{{ item[1] }}">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='images/products/default-product.png') }}" alt="No Image">
+                    {% endif %}
+                </div>
+
+                <h3>{{ item[1] }}</h3>
+
+                <p class="price">
+                    ₹{{ "%.2f"|format((item[2]|float) - (item[3]|float)) }}
+                    {% if item[3]|float > 0 %}
+                        <span class="old-price">₹{{ "%.2f"|format(item[2]|float) }}</span>
+                    {% endif %}
+                </p>
+
+                <div class="card-actions">
+                    <a href="{{ url_for('product_details', product_id=item[0]) }}" class="btn btn-outline">View</a>
+                    <a href="{{ url_for('add_to_cart', product_id=item[0]) }}" class="btn">Add to Cart</a>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No related products available.</p>
+        {% endif %}
+    </div>
+
+    {% else %}
+        <div class="form-container">
+            <h2>Product Not Found</h2>
+            <p style="text-align:center; color:#00050e;">The requested product could not be loaded.</p>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}
